@@ -1,9 +1,18 @@
 package es.iestetuan.dam2;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Properties;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import es.iestetuan.dam2.vo.InfoConfiguracion;
 
@@ -17,10 +26,18 @@ import es.iestetuan.dam2.vo.InfoConfiguracion;
 
 public class GestorConfiguracion {
 	private static Properties configuracion;
-//	private static InfoConfiguracion configuracionJSON;
+	private static JsonObject configuracionJSON;
 //	private static InfoConfiguracion configuracionXML;
 
-	public static Properties getConfiguracion() {
+	public static String getInfoAtributoConfiguracion(String atributoConfiguracion) {
+		return getConfiguracion().getProperty(atributoConfiguracion);	
+	}
+
+	public static JsonElement getInfoAtributoConfiguracionJSON(String atributoConfiguracion) {
+		return getConfiguracionJSON().get(atributoConfiguracion);	
+	}
+
+	private static Properties getConfiguracion() {
 		if(configuracion==null) {
 			configuracion= cargarConfiguracion();
 		}
@@ -41,14 +58,39 @@ public class GestorConfiguracion {
 		return infoConfig;
 	}
 	
-	/*
-	public static InfoConfiguracion getConfiguracionJSON() {
+	private static JsonObject getConfiguracionJSON() {
 		if(configuracionJSON==null) {
 			configuracionJSON= cargarConfiguracionJSON();
 		}
 		return configuracionJSON;	
 	}
 	
+	private static JsonObject cargarConfiguracionJSON() {
+		File fichero = new File ("config/dam2-aadd.json");
+		String jsonString= null;
+		JsonObject jsonObject =null;
+		try {
+			jsonString= new String(Files.readAllBytes(fichero.toPath()));
+			//jsonString is of type java.lang.String
+			 jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
+/*
+			//reader is of type java.io.Reader
+			JsonObject jsonObject = JsonParser.parseReader​(reader).getAsJsonObject();
+
+			//jsonReader is of type com.google.gson.stream.JsonReader
+			JsonObject jsonObject = JsonParser.parseReader​(jsonReader).getAsJsonObject();
+			*/
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+	
+	/*	
 	public static InfoConfiguracion getConfiguracionXML() {
 		if(configuracionXML==null) {
 			configuracionXML= cargarConfiguracionXML();
@@ -57,21 +99,6 @@ public class GestorConfiguracion {
 	}
 	
 	
-	private static InfoConfiguracion cargarConfiguracionJSON() {
-		InfoConfiguracion configuracion =null;
-		Gson gson = new Gson();	
-		File fichero = new File ("dam2-aadd.json");
-		try {
-			configuracion = gson.fromJson(new String(Files.readAllBytes(fichero.toPath())), InfoConfiguracion.class);
-		} catch (JsonSyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return configuracion;
-	}
 	
 	private static InfoConfiguracion cargarConfiguracionXML() {
 		InfoConfiguracion configuracion =null;
@@ -96,12 +123,26 @@ public class GestorConfiguracion {
 	}	
 	*/
 	public static void main(String[] args) {
+		// Acceso a informacion del sistema
 		// https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
-		//System.out.println("La carpeta de mi usuario es " + System.getProperty("user.home"));
+		System.out.println("La carpeta de mi usuario es " + System.getProperty("user.home"));
 		
-		System.out.println(getConfiguracion());
+		// Acceso a información de un fichero de configuración: Devuelve Properties
+		System.out.println(getInfoAtributoConfiguracion("usuariodaoimp"));
+
+		// Acceso a información de un fichero de configuración de tipo JSON
+		JsonElement sValorAtributo=getInfoAtributoConfiguracionJSON("servidor");
+		System.out.println(sValorAtributo);
 		
+		sValorAtributo=getInfoAtributoConfiguracionJSON("infodaousuario");
+		JsonArray arrayAtributo = (JsonArray)getInfoAtributoConfiguracionJSON("infodaousuario");
+		JsonElement jsonObject = arrayAtributo.get(0);
+		String  atributo= jsonObject.getAsJsonObject().get("usuariodaoimp").getAsString();
+		System.out.println(atributo);
 		
+		sValorAtributo=getInfoAtributoConfiguracionJSON("infodaousuario.usuariodaoimp");
+		System.out.println(sValorAtributo);
+
 	}
 }
 

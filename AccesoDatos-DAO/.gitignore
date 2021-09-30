@@ -27,4 +27,4 @@ tomcat
 .settings/
 .classpath
 .project
-
+bin/

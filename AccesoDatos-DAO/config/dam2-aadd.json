@@ -3,5 +3,12 @@
 	"usuario": "aadd",
 	"clave": "aadd1",
 	"servidor": "localhost",
-	"puerto": "3306"
+	"puerto": "3306",
+	
+	"infodaousuario":[
+		{
+			"usuariodaoimp": "es.iestetuan.dam2.dao.fictex.UsuarioFicTextDAO",
+			"rutaFichero": "datos/usuarios.txt"			
+		}
+	]
  }
