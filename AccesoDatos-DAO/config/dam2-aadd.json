@@ -1,14 +1,28 @@
 {
-	"basedatos": "aadd1",
-	"usuario": "aadd",
-	"clave": "aadd1",
-	"servidor": "localhost",
-	"puerto": "3306",
-	
-	"infodaousuario":[
+	"bbddrel":[
 		{
-			"usuariodaoimp": "es.iestetuan.dam2.dao.fictex.UsuarioFicTextDAO",
-			"rutaFichero": "datos/usuarios.txt"			
+			"id": "1",
+			"nombre": "MySQL para AADD", 
+			"servidorbbdd":{
+				"basedatos": "aadd1",
+				"usuario": "aadd",
+				"clave": "aadd1",
+				"servidor": "localhost",
+				"puerto": "3306"
+			}
+		},
+		{
+			"id": "2",
+			"nombre": "PostgreSQL para AADD", 
+			"servidorbbdd":{
+				"basedatos": "aadd1",
+				"usuario": "aadd",
+				"clave": "aadd1",
+				"servidor": "localhost",
+				"puerto": "3306"
+			}		
 		}
-	]
+	],
+	"usuariodaoimp": "es.iestetuan.dam2.dao.fictex.UsuarioFicTextDAO",
+	"rutaFichero": "datos/usuarios.txt"			
  }

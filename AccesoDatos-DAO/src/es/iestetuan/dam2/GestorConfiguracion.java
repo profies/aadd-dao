@@ -131,16 +131,16 @@ public class GestorConfiguracion {
 		System.out.println(getInfoAtributoConfiguracion("usuariodaoimp"));
 
 		// Acceso a información de un fichero de configuración de tipo JSON
-		JsonElement sValorAtributo=getInfoAtributoConfiguracionJSON("servidor");
+		JsonElement sValorAtributo=getInfoAtributoConfiguracionJSON("usuariodaoimp");
+		System.out.println(sValorAtributo);
+		sValorAtributo=getInfoAtributoConfiguracionJSON("rutaFichero");
 		System.out.println(sValorAtributo);
 		
-		sValorAtributo=getInfoAtributoConfiguracionJSON("infodaousuario");
-		JsonArray arrayAtributo = (JsonArray)getInfoAtributoConfiguracionJSON("infodaousuario");
-		JsonElement jsonObject = arrayAtributo.get(0);
-		String  atributo= jsonObject.getAsJsonObject().get("usuariodaoimp").getAsString();
-		System.out.println(atributo);
 		
-		sValorAtributo=getInfoAtributoConfiguracionJSON("infodaousuario.usuariodaoimp");
+		sValorAtributo=getInfoAtributoConfiguracionJSON("bbddrel");
+//		JsonArray arrayAtributo = (JsonArray)getInfoAtributoConfiguracionJSON("infodaousuario");
+//		JsonElement jsonObject = arrayAtributo.get(0);
+//		String  atributo= jsonObject.getAsJsonObject().get("usuariodaoimp").getAsString();
 		System.out.println(sValorAtributo);
 
 	}
