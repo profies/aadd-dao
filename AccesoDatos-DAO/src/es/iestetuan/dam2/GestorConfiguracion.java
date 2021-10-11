@@ -5,16 +5,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Scanner;
+import java.util.Set;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
-import es.iestetuan.dam2.vo.InfoConfiguracion;
 
 /**
  *  @descrition
@@ -25,25 +31,25 @@ import es.iestetuan.dam2.vo.InfoConfiguracion;
  */
 
 public class GestorConfiguracion {
-	private static Properties configuracion;
-	private static JsonObject configuracionJSON;
-//	private static InfoConfiguracion configuracionXML;
+	private static Properties propiedadesConfiguracion;
 
-	public static String getInfoAtributoConfiguracion(String atributoConfiguracion) {
-		return getConfiguracion().getProperty(atributoConfiguracion);	
-	}
-
-	public static JsonElement getInfoAtributoConfiguracionJSON(String atributoConfiguracion) {
-		return getConfiguracionJSON().get(atributoConfiguracion);	
-	}
-
-	private static Properties getConfiguracion() {
-		if(configuracion==null) {
-			configuracion= cargarConfiguracion();
+	
+	public static Properties getPropiedadesConfiguracion() {
+		// Por defecto carga la configuración de tipo properties
+		if (propiedadesConfiguracion==null) {
+			propiedadesConfiguracion=cargarConfiguracion();
 		}
-		return configuracion;	
+		return propiedadesConfiguracion;
 	}
 
+
+	public static void setPropiedadesConfiguracion(Properties propiedadesConfiguracion) {
+		GestorConfiguracion.propiedadesConfiguracion = propiedadesConfiguracion;
+	}
+
+	public static String getInfoAtributoConfiguracion(String clave) {
+		return getPropiedadesConfiguracion().getProperty(clave);
+	} 
 	private static Properties cargarConfiguracion() {
 		Properties infoConfig = new Properties();
 		
@@ -58,14 +64,9 @@ public class GestorConfiguracion {
 		return infoConfig;
 	}
 	
-	private static JsonObject getConfiguracionJSON() {
-		if(configuracionJSON==null) {
-			configuracionJSON= cargarConfiguracionJSON();
-		}
-		return configuracionJSON;	
-	}
 	
-	private static JsonObject cargarConfiguracionJSON() {
+	private static Properties cargarConfiguracionJSON() {
+		Properties propiedades= new Properties();
 		File fichero = new File ("config/dam2-aadd.json");
 		String jsonString= null;
 		JsonObject jsonObject =null;
@@ -80,6 +81,12 @@ public class GestorConfiguracion {
 			//jsonReader is of type com.google.gson.stream.JsonReader
 			JsonObject jsonObject = JsonParser.parseReader​(jsonReader).getAsJsonObject();
 			*/
+			 Set<String> claves = jsonObject.keySet();
+			 for( Iterator<String> it = claves.iterator(); it.hasNext();) { 
+				    String clave = it.next();
+				    String valor = jsonObject.get(clave).getAsString();
+				    propiedades.setProperty(clave, valor);
+				}
 		} catch (JsonSyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,7 +94,40 @@ public class GestorConfiguracion {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return jsonObject;
+		return propiedades;
+	}
+	
+
+	private static Properties cargarConfiguracionXML() {
+		Properties propiedades= new Properties();
+		File fichero = new File ("config/dam2-aadd.xml");
+		Document documento = null;
+		try {
+			  DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			  DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			  documento = dBuilder.parse(fichero);
+			  documento.getDocumentElement().normalize();
+			} catch(Exception e) {
+			  e.printStackTrace();
+		}
+		// almacenamos los nodos para luego mostrar la
+		// cantidad de ellos con el método getLength()
+		NodeList nListIni = documento.getElementsByTagName("configuracion");
+		System.out.println("Bloques de configuración: " + nListIni.getLength());
+		// Se obtienen los nodos asociados a la entrada "configuraion"
+		NodeList nList= nListIni.item(0).getChildNodes();		
+		for(int temp = 0; temp < nList.getLength(); temp++) {
+			  Node nNode = nList.item(temp);
+
+			  if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+			    Element eElement = (Element) nNode;
+			    String clave = eElement.getNodeName();
+			    Node valor = eElement.getChildNodes().item(0);
+			    propiedades.setProperty(clave, valor.getNodeValue());
+			  }
+		}
+		
+		return propiedades;
 	}
 	
 	/*	
@@ -125,24 +165,30 @@ public class GestorConfiguracion {
 	public static void main(String[] args) {
 		// Acceso a informacion del sistema
 		// https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
-		System.out.println("La carpeta de mi usuario es " + System.getProperty("user.home"));
+		//System.out.println("La carpeta de mi usuario es " + System.getProperty("user.home"));
+		Scanner nombreObjeto = new Scanner(System.in);
+		int valor = nombreObjeto.nextInt();
+		nombreObjeto.close();
+		switch (valor) {
+		case 1: {
+			setPropiedadesConfiguracion(cargarConfiguracion());
+			break;
+		}
+		case 2: {
+			setPropiedadesConfiguracion(cargarConfiguracionJSON());
+			break;
+		}
+		case 3: {
+			setPropiedadesConfiguracion(cargarConfiguracionXML());
+			break;
+		}
+
+		default:
+			throw new IllegalArgumentException("Valor inesperado para la gestión de la configuración: " + valor);
+		}
 		
 		// Acceso a información de un fichero de configuración: Devuelve Properties
-		System.out.println(getInfoAtributoConfiguracion("usuariodaoimp"));
-
-		// Acceso a información de un fichero de configuración de tipo JSON
-		JsonElement sValorAtributo=getInfoAtributoConfiguracionJSON("usuariodaoimp");
-		System.out.println(sValorAtributo);
-		sValorAtributo=getInfoAtributoConfiguracionJSON("rutaFichero");
-		System.out.println(sValorAtributo);
-		
-		
-		sValorAtributo=getInfoAtributoConfiguracionJSON("bbddrel");
-//		JsonArray arrayAtributo = (JsonArray)getInfoAtributoConfiguracionJSON("infodaousuario");
-//		JsonElement jsonObject = arrayAtributo.get(0);
-//		String  atributo= jsonObject.getAsJsonObject().get("usuariodaoimp").getAsString();
-		System.out.println(sValorAtributo);
-
+		System.out.println(getPropiedadesConfiguracion());
 	}
 }
 

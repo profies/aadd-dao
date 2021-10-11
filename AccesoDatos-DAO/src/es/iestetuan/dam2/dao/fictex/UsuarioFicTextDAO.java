@@ -14,7 +14,7 @@ import es.iestetuan.dam2.vo.Usuario;
 
 public class UsuarioFicTextDAO implements IUsuarioDao {
 	
-	private static String FICHERO_USUARIOS=GestorConfiguracion.getInfoAtributoConfiguracion("rutaFichero");
+	private static String FICHERO_USUARIOS=GestorConfiguracion.getInfoAtributoConfiguracion("rutaFicheroTexto");
 	
 	public Usuario getUsuario(int id) {
 		Usuario usuarioRespuesta=null;
@@ -89,6 +89,18 @@ public class UsuarioFicTextDAO implements IUsuarioDao {
 		}
 		
 		return listaUsuarios;
+	}
+
+	@Override
+	public void guardarUsuario(Usuario usuario) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void guardarUsuarios(List<Usuario> usuarios) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
