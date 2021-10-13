@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -70,10 +71,12 @@ public class GestorConfiguracion {
 		File fichero = new File ("config/dam2-aadd.json");
 		String jsonString= null;
 		JsonObject jsonObject =null;
+		//JsonElement jsonElement =null;
 		try {
 			jsonString= new String(Files.readAllBytes(fichero.toPath()));
 			//jsonString is of type java.lang.String
 			 jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
+
 /*
 			//reader is of type java.io.Reader
 			JsonObject jsonObject = JsonParser.parseReader​(reader).getAsJsonObject();
@@ -98,6 +101,26 @@ public class GestorConfiguracion {
 	}
 	
 
+	private static Properties cargarConfiguracionJSON2() {
+		Properties propiedades= new Properties();
+		File fichero = new File ("config/dam2-aadd.json");
+		String jsonString= null;
+		try {
+			jsonString= new String(Files.readAllBytes(fichero.toPath()));
+			JSONObject jsonObject = new JSONObject(jsonString);
+			System.out.println("jsonStr:"+jsonObject.toString());
+			 Set<String> claves = jsonObject.keySet();
+			 for( Iterator<String> it = claves.iterator(); it.hasNext();) { 
+			    String clave = it.next();
+			    String valor = jsonObject.getString(clave);
+			    propiedades.setProperty(clave, valor);
+			}
+	    } catch (Exception e) {
+	        System.out.println("Excepcion leyendo fichero de configuracion " + e);
+	    }
+		return propiedades;
+	}
+	
 	private static Properties cargarConfiguracionXML() {
 		Properties propiedades= new Properties();
 		File fichero = new File ("config/dam2-aadd.xml");
@@ -166,6 +189,7 @@ public class GestorConfiguracion {
 		// Acceso a informacion del sistema
 		// https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
 		//System.out.println("La carpeta de mi usuario es " + System.getProperty("user.home"));
+		System.out.println("Selecciona la forma de cargar el fichero de configuración: 1 -> PROPERTIES, 2 -> JSON, 3 -> XML.");
 		Scanner nombreObjeto = new Scanner(System.in);
 		int valor = nombreObjeto.nextInt();
 		nombreObjeto.close();
@@ -175,7 +199,7 @@ public class GestorConfiguracion {
 			break;
 		}
 		case 2: {
-			setPropiedadesConfiguracion(cargarConfiguracionJSON());
+			setPropiedadesConfiguracion(cargarConfiguracionJSON2());
 			break;
 		}
 		case 3: {
