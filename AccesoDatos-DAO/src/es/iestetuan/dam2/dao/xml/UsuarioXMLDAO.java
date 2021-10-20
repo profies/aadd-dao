@@ -1,8 +1,18 @@
 package es.iestetuan.dam2.dao.xml;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -17,14 +27,83 @@ public class UsuarioXMLDAO implements IUsuarioDao {
 	private static String RUTA_FICHERO_USUARIOS_XML=GestorConfiguracion.getInfoAtributoConfiguracion("rutaFicheroUsuariosXML");
 	@Override
 	public Usuario getUsuario(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Usuario usuario = null;
+		File fichero = new File (RUTA_FICHERO_USUARIOS_XML);
+		Document documento = null;
+		try {
+			  DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			  DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			  documento = dBuilder.parse(fichero);
+			  documento.getDocumentElement().normalize();
+			} catch(Exception e) {
+			  e.printStackTrace();
+		}
+		// almacenamos los nodos para luego mostrar la
+		// cantidad de ellos con el método getLength()
+		NodeList nListIni = documento.getElementsByTagName("usuario");
+		System.out.println("Nº de bloques de usuario: " + nListIni.getLength());
+		for(int temp = 0; temp < nListIni.getLength(); temp++) {
+			Node nNode = nListIni.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+			    Element elemento = (Element) nNode;
+			    String sId = elemento.getAttribute("id");
+			    if(sId!=null || !"".equals(sId)) {
+				    long idXML=Long.parseLong(sId);
+				    if(idXML==id) {
+				    	usuario=new Usuario();
+				    	String nombre= elemento.getElementsByTagName("nombre").item(0).getTextContent();
+				    	String apellido1= elemento.getElementsByTagName("apellido1").item(0).getTextContent();
+				    	String apellido2= elemento.getElementsByTagName("apellido2").item(0).getTextContent();
+				    	usuario.setId(id);
+				    	usuario.setNombre(nombre);
+				    	usuario.setApellido1(apellido1);
+				    	usuario.setApellido2(apellido2);
+				    	break;
+				    }
+			    }
+			}
+		}
+		
+		return usuario;
 	}
 
 	@Override
 	public List<Usuario> getListaUsuarios() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Usuario> listaUsuarios= new ArrayList<Usuario>();
+		Usuario usuario=null;
+		File fichero = new File (RUTA_FICHERO_USUARIOS_XML);
+		Document documento = null;
+		try {
+			  DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			  DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			  documento = dBuilder.parse(fichero);
+			  documento.getDocumentElement().normalize();
+			} catch(Exception e) {
+			  e.printStackTrace();
+		}
+		// almacenamos los nodos para luego mostrar la
+		// cantidad de ellos con el método getLength()
+		NodeList nListIni = documento.getElementsByTagName("usuario");
+		System.out.println("Nº de bloques de usuario: " + nListIni.getLength());
+		for(int temp = 0; temp < nListIni.getLength(); temp++) {
+			Node nNode = nListIni.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+			    Element elemento = (Element) nNode;
+			    String sId = elemento.getAttribute("id");
+			    int id= Integer.parseInt(sId);
+		    	String nombre= elemento.getElementsByTagName("nombre").item(0).getTextContent();
+		    	String apellido1= elemento.getElementsByTagName("apellido1").item(0).getTextContent();
+		    	String apellido2= elemento.getElementsByTagName("apellido2").item(0).getTextContent();
+		    	usuario=new Usuario();
+		    	usuario.setId(id);
+		    	usuario.setNombre(nombre);
+		    	usuario.setApellido1(apellido1);
+		    	usuario.setApellido2(apellido2);
+		    	listaUsuarios.add(usuario);
+			}
+		}
+		
+		return listaUsuarios;
 	}
 
 	@Override

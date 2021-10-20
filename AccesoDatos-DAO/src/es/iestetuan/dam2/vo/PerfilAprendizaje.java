@@ -1,21 +1,24 @@
 package es.iestetuan.dam2.vo;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
 
 public class PerfilAprendizaje {
 	private String id;
 	private int orden;
 	private String tipo;
 	private String descripcion;
-	private InfoGeneral general;
-	private String sentimientos ;
-	private String comportamientos;
-	private String necesidades;
-	private String reconocimiento;
-	private String identificacion;
-	private String ayudaInterna;
-	private String ayudaExterna;
+	private List<String> general;
+	private List<String> sentimientos ;
+	private List<String> comportamientos;
+	private List<String> necesidades;
+	private List<String> reconocimiento;
+	private List<String> identificacion;
+	@SerializedName("ayuda-interna") 
+	private List<String> ayudaInterna;
+	@SerializedName("ayuda-externa")	
+	private List<String> ayudaExterna;
 	
 
 	public String getId() {
@@ -42,53 +45,53 @@ public class PerfilAprendizaje {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-
-	public String getSentimientos() {
+	public List<String> getGeneral() {
+		return general;
+	}
+	public void setGeneral(List<String> general) {
+		this.general = general;
+	}
+	public List<String> getSentimientos() {
 		return sentimientos;
 	}
-	public void setSentimientos(String sentimientos) {
+	public void setSentimientos(List<String> sentimientos) {
 		this.sentimientos = sentimientos;
 	}
-	public String getComportamientos() {
+	public List<String> getComportamientos() {
 		return comportamientos;
 	}
-	public void setComportamientos(String comportamientos) {
+	public void setComportamientos(List<String> comportamientos) {
 		this.comportamientos = comportamientos;
 	}
-	public String getNecesidades() {
+	public List<String> getNecesidades() {
 		return necesidades;
 	}
-	public void setNecesidades(String necesidades) {
+	public void setNecesidades(List<String> necesidades) {
 		this.necesidades = necesidades;
 	}
-	public String getReconocimiento() {
+	public List<String> getReconocimiento() {
 		return reconocimiento;
 	}
-	public void setReconocimiento(String reconocimiento) {
+	public void setReconocimiento(List<String> reconocimiento) {
 		this.reconocimiento = reconocimiento;
 	}
-	public String getIdentificacion() {
+	public List<String> getIdentificacion() {
 		return identificacion;
 	}
-	public void setIdentificacion(String identificacion) {
+	public void setIdentificacion(List<String> identificacion) {
 		this.identificacion = identificacion;
 	}
-	public String getAyudaInterna() {
+	public List<String> getAyudaInterna() {
 		return ayudaInterna;
 	}
-	public void setAyudaInterna(String ayudaInterna) {
+	public void setAyudaInterna(List<String> ayudaInterna) {
 		this.ayudaInterna = ayudaInterna;
 	}
-	public String getAyudaExterna() {
+	public List<String> getAyudaExterna() {
 		return ayudaExterna;
 	}
-	public void setAyudaExterna(String ayudaExterna) {
+	public void addAyudaExterna(List<String> ayudaExterna) {
 		this.ayudaExterna = ayudaExterna;
 	}
-	public InfoGeneral getGeneral() {
-		return this.general;
-	}
-	public void setGeneral(InfoGeneral info) {
-		this.general=info;
-	}
+
 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 import es.iestetuan.dam2.GestorConfiguracion;
 import es.iestetuan.dam2.dao.IUsuarioDao;
 import es.iestetuan.dam2.dao.fictex.UsuarioFicTextDAO;
+import es.iestetuan.dam2.dao.json.UsuarioJSONDAO;
 import es.iestetuan.dam2.dao.xml.UsuarioJAXBDAO;
 import es.iestetuan.dam2.dao.xml.UsuarioXMLDAO;
 import es.iestetuan.dam2.vo.Usuario;
@@ -20,10 +21,11 @@ public class GestorUsuario {
 		Scanner nombreObjeto = new Scanner(System.in);
 		int nia = nombreObjeto.nextInt();
 		nombreObjeto.close();
-		int parser = 2; //JAXB
-		gu.guardarUsuarioXML(nia, parser);
-		gu.guardarUsuariosXML(parser);
-		//gu.imprimirUsuario(2);
+		int parser = 1; //JAXB
+		gu.guardarUsuarioJSON(nia);
+		// gu.guardarUsuarioXML(nia, parser);
+		// gu.guardarUsuariosXML(parser);
+		//gu.imprimirUsuario(171);
 		//gu.imprimirUsuarios();
 	}
 	public void imprimirUsuario(int nia) {
@@ -35,17 +37,43 @@ public class GestorUsuario {
 		
 	}
 	public void guardarUsuarioXML(int nia, int parser) {
-		IUsuarioDao usuarioDAO = new UsuarioFicTextDAO();
-		
-		Usuario usuario =usuarioDAO.getUsuario(nia);
-		
+//		IUsuarioDao usuarioDAO = new UsuarioFicTextDAO();
+		IUsuarioDao usuarioDAO =new UsuarioXMLDAO();
+/*		
 		if(parser==1) {
 			usuarioDAO = new UsuarioXMLDAO();
 		}else {
 			usuarioDAO = new UsuarioJAXBDAO();
 		}
-		System.out.println(usuario.getId() + " - " + usuario.getNickname() + " - " + usuario.getEmail());
-		usuarioDAO.guardarUsuario(usuario);		
+*/		
+		Usuario usuario1 =usuarioDAO.getUsuario(nia);
+		if(usuario1!=null) {
+			System.out.println(usuario1.getId() + " - " + usuario1.getNombre() + " - " + usuario1.getApellido1()  + " - " + usuario1.getApellido2() + " - " + usuario1.getNickname() + " - " + usuario1.getEmail());
+		}
+		
+		List<Usuario> lista =usuarioDAO.getListaUsuarios();
+		for (Usuario usuario : lista) {
+			System.out.println(usuario.getId() + " - " + usuario.getNombre() + " - " + usuario.getApellido1()  + " - " + usuario.getApellido2() + " - " + usuario.getNickname() + " - " + usuario1.getEmail());	
+		}
+
+		
+
+	}	
+
+	public void guardarUsuarioJSON(int nia) {
+		IUsuarioDao usuarioDAO =new UsuarioJSONDAO();
+		Usuario usuario1 =usuarioDAO.getUsuario(nia);
+		if(usuario1!=null) {
+			System.out.println(usuario1.getId() + " - " + usuario1.getNombre() + " - " + usuario1.getApellido1()  + " - " + usuario1.getApellido2() + " - " + usuario1.getNickname() + " - " + usuario1.getEmail());
+		}
+		
+		List<Usuario> lista =usuarioDAO.getListaUsuarios();
+		for (Usuario usuario : lista) {
+			System.out.println(usuario.getId() + " - " + usuario.getNombre() + " - " + usuario.getApellido1()  + " - " + usuario.getApellido2() + " - " + usuario.getNickname() + " - " + usuario1.getEmail());	
+		}
+
+		
+
 	}	
 
 	public void guardarUsuariosXML(int parser) {

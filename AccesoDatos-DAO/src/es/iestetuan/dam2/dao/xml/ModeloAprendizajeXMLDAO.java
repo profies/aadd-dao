@@ -80,6 +80,7 @@ public class ModeloAprendizajeXMLDAO implements IModeloAprendizajeDao {
 		modelo.setDetalle("Detalle desc1");
 
 		PerfilAprendizaje perfilAprendizaje=new PerfilAprendizaje();
+		/*
 		perfilAprendizaje.setAyudaExterna("AyudaExterna1");
 		perfilAprendizaje.setAyudaInterna("AyudaInterna1");
 		perfilAprendizaje.setComportamientos("Comportamientos1");
@@ -89,12 +90,12 @@ public class ModeloAprendizajeXMLDAO implements IModeloAprendizajeDao {
 		info1.addInfo("info1");
 		info1.addInfo("info2");
 		perfilAprendizaje.setGeneral(info1);
-		/*
+	
 		InfoGeneral info2= new InfoGeneral();
 		info2.setOrden(2);
 		info2.setValor("info2");
 		perfilAprendizaje.setGeneral(info2);
-		*/
+		
 		perfilAprendizaje.setId("0001");
 		perfilAprendizaje.setIdentificacion("Identificacion1");
 		perfilAprendizaje.setNecesidades("Necesidades1");
@@ -114,12 +115,12 @@ public class ModeloAprendizajeXMLDAO implements IModeloAprendizajeDao {
 		info2.addInfo("info1");
 		info2.addInfo("info2");
 		perfilAprendizaje.setGeneral(info2);
-		/*
+		
 		InfoGeneral info4= new InfoGeneral();
 		info4.setOrden(2);
 		info4.setValor("info4");
 		perfilAprendizaje.setGeneral(info4);
-		*/
+		
 		perfilAprendizaje.setId("0001");
 		perfilAprendizaje.setIdentificacion("Identificacion1");
 		perfilAprendizaje.setNecesidades("Necesidades1");
@@ -127,8 +128,9 @@ public class ModeloAprendizajeXMLDAO implements IModeloAprendizajeDao {
 		perfilAprendizaje.setReconocimiento("Reconocimiento1");
 		perfilAprendizaje.setSentimientos("Sentimientos1");
 		perfilAprendizaje.setTipo("Tipo1");
-		modelo.addPerfilAprendizaje(perfilAprendizaje);
-		
+	
+		modelo.setPerfiles(perfilAprendizaje);
+		*/	
 		RUTA_FICHERO_XML="datos/perfiles_betts-neihart.xml";
 		File ficheroXML= new File(RUTA_FICHERO_XML);
 		

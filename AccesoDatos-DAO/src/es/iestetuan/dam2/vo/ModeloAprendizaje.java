@@ -1,6 +1,5 @@
 package es.iestetuan.dam2.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ModeloAprendizaje {
@@ -8,7 +7,7 @@ public class ModeloAprendizaje {
 	private String clave;
 	private String descripcion;
 	private String detalle;
-	private List<PerfilAprendizaje> perfiles = new ArrayList<PerfilAprendizaje>();
+	private List<PerfilAprendizaje> perfiles;
 	public int getId() {
 		return id;
 	}
@@ -36,7 +35,11 @@ public class ModeloAprendizaje {
 	public List<PerfilAprendizaje> getPerfilesAprendizaje() {
 		return perfiles;
 	}
-	public void addPerfilAprendizaje(PerfilAprendizaje perfilAprendizaje) {
-		this.perfiles.add(perfilAprendizaje);
-	}	
+	public List<PerfilAprendizaje> getPerfiles() {
+		return perfiles;
+	}
+	public void setPerfiles(List<PerfilAprendizaje> perfiles) {
+		this.perfiles = perfiles;
+	}
+	
 }
