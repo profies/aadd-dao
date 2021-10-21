@@ -3,16 +3,26 @@ package es.iestetuan.dam2.dao.xml;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -108,24 +118,70 @@ public class UsuarioXMLDAO implements IUsuarioDao {
 
 	@Override
 	public void guardarUsuario(Usuario usuario) {
-		XStream xstream = new XStream();
-
-		xstream.alias("usuario", Usuario.class);
-		String usuarioXML = xstream.toXML(usuario);
-		String rutaXML=RUTA_FICHERO_XML.replaceFirst("\\[NIA]", String.valueOf(usuario.getId()));
-		guardaFicheroXML(rutaXML, usuarioXML);
-	}
+		List<Usuario> listaUsuarios = getListaUsuarios();
+		}
 
 	@Override
 	public void guardarUsuarios(List<Usuario> listaUsuarios) {
-		XStream xstream = new XStream();
-		xstream.alias("usuarios", List.class);
-		xstream.alias("usuario", Usuario.class);
-		String usuarioXML = xstream.toXML(listaUsuarios);
-		
-		guardaFicheroXML(RUTA_FICHERO_USUARIOS_XML, usuarioXML);
+		Document documento = null;
+		try {
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			DOMImplementation domImpl = dBuilder.getDOMImplementation();
+			documento = domImpl.createDocument(null, "xml", null);
+				
+			// Se crear el nodo raíz
+			Element raiz = documento.createElement("usuarios");
+			documento.getDocumentElement().appendChild(raiz);
 
-		
+			// Información para nodos internos
+			Element nodoUsuario = null , nodoDatos = null ;
+			Text texto = null;
+			Attr atributo=null;
+			 
+			for (Usuario usu: listaUsuarios) {
+				// Se asigna el nodo/elemento usuario a elemento raíz 
+				nodoUsuario = documento.createElement("usuario");
+				raiz.appendChild(nodoUsuario);
+				
+				// Se carga información atributo id al usuario
+				String sId = String.valueOf(usu.getId());
+				atributo= documento.createAttribute("id");
+				nodoUsuario.setAttributeNode(atributo);
+				atributo.setTextContent(sId);
+				
+	
+				// Se carga información nombre
+				nodoDatos = documento.createElement("nombre");
+				nodoUsuario.appendChild(nodoDatos);
+				texto = documento.createTextNode(usu.getNombre());
+				nodoDatos.appendChild(texto);
+	
+				// Se carga información apellido1
+				nodoDatos = documento.createElement("apellido1");
+				nodoUsuario.appendChild(nodoDatos);
+				texto = documento.createTextNode(usu.getApellido1());
+				nodoDatos.appendChild(texto);
+	
+				// Se carga información apellido2
+				nodoDatos = documento.createElement("apellido2");
+				nodoUsuario.appendChild(nodoDatos);
+				texto = documento.createTextNode(usu.getApellido2());
+				nodoDatos.appendChild(texto);
+				// Se carga información email
+				nodoDatos = documento.createElement("email");
+				nodoUsuario.appendChild(nodoDatos);
+				texto = documento.createTextNode(usu.getEmail());
+				nodoDatos.appendChild(texto);
+				
+			}
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			Result output = new StreamResult(new File("datos/alumnosDOM.xml"));
+			Source input = new DOMSource(documento);
+			transformer.transform(input, output);
+		} catch(Exception e) {
+			  e.printStackTrace();
+		}		
 	}
 	private void guardaFicheroXML(String rutaXML, String infoXML) {
 		FileOutputStream fos = null;

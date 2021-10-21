@@ -21,10 +21,9 @@ public class GestorUsuario {
 		Scanner nombreObjeto = new Scanner(System.in);
 		int nia = nombreObjeto.nextInt();
 		nombreObjeto.close();
-		int parser = 1; //JAXB
-		gu.guardarUsuarioJSON(nia);
+		//gu.guardarUsuarioJSON(nia);
 		// gu.guardarUsuarioXML(nia, parser);
-		// gu.guardarUsuariosXML(parser);
+		gu.guardarUsuariosXML();
 		//gu.imprimirUsuario(171);
 		//gu.imprimirUsuarios();
 	}
@@ -76,17 +75,12 @@ public class GestorUsuario {
 
 	}	
 
-	public void guardarUsuariosXML(int parser) {
+	public void guardarUsuariosXML() {
 		IUsuarioDao usuarioDAO = new UsuarioFicTextDAO();
 		
 		List<Usuario> listaUsuarios =usuarioDAO.getListaUsuarios();
 		
-		if(parser==1) {
-			usuarioDAO = new UsuarioXMLDAO();
-		}else {
-			// Inicilizar JVM con --illegal-access=permit
-			usuarioDAO = new UsuarioJAXBDAO();
-		}
+		usuarioDAO = new UsuarioXMLDAO();
 
 		usuarioDAO.guardarUsuarios(listaUsuarios);
 		
